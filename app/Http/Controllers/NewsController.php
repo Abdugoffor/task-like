@@ -44,12 +44,6 @@ class NewsController extends Controller
         $model->likes = 0;
         $model->save();
 
-        $mailData = [
-            'title' => 'Текст заголовка',
-            'body' => 'Основной текст'
-        ];
-
-        Mail::to(Auth::user()->email)->send(new DemoMail($mailData));
 
         return redirect()->back()->with('text', 'Successful');
     }
