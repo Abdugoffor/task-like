@@ -7,6 +7,8 @@ use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use function Pest\Laravel\delete;
+
 class CommentController extends Controller
 {
     public function index(News $news)
@@ -28,6 +30,11 @@ class CommentController extends Controller
         $models->text = $request->text;
         $models->save();
 
+        return redirect()->back();
+    }
+    public function deletecomment(Comment $comment)
+    {
+        $comment->delete();
         return redirect()->back();
     }
 }

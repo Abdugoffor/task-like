@@ -4,6 +4,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Models\Like;
 use Illuminate\Support\Facades\Route;
 
@@ -33,13 +34,28 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/kabinet', [NewsController::class, 'index'])->name('kabinet');
-Route::post('/addnews', [NewsController::class, 'store'])->name('addnews');
-Route::put('/editnews/{news}', [NewsController::class, 'edit'])->name('editnews');
-Route::post('/deletenews/{news}', [NewsController::class, 'delete'])->name('deletenews');
-Route::get('/comment/{news}', [CommentController::class, 'index'])->name('comment');
-Route::post('/addcomment/{news}', [CommentController::class, 'addcomment'])->name('addcomment');
-Route::get('/like/{news}', [LikeController::class, 'store'])->name('like');
+// Role user
+
+Route::group(['middleware' => ['ChackRole:1,2']], function () {
+    Route::get('/kabinet', [NewsController::class, 'index'])->name('kabinet');
+    Route::post('/addnews', [NewsController::class, 'store'])->name('addnews');
+    Route::put('/editnews/{news}', [NewsController::class, 'edit'])->name('editnews');
+    Route::post('/deletenews/{news}', [NewsController::class, 'delete'])->name('deletenews');
+    Route::get('/comment/{news}', [CommentController::class, 'index'])->name('comment');
+    Route::post('/addcomment/{news}', [CommentController::class, 'addcomment'])->name('addcomment');
+    Route::get('/like/{news}', [LikeController::class, 'store'])->name('like');
+});
+// Role admin
+Route::group(['middleware' => ['ChackRole:1']], function () {
+    Route::get('/user', [UserController::class, 'index'])->name('user');
+    Route::put('/edituser/{user}', [UserController::class, 'edituser'])->name('edituser');
+    Route::post('/deleteuser/{user}', [UserController::class, 'deleteuser'])->name('deleteuser');
+    Route::get('/sendemail/{user}', [UserController::class, 'sendemail'])->name('sendemail');
+    Route::get('/viewcomments/{user}', [NewsController::class, 'viewcomments'])->name('viewcomments');
+    Route::get('/viewnews/{user}', [NewsController::class, 'viewnews'])->name('viewnews');
+    Route::post('/deletecomment/{comment}', [CommentController::class, 'deletecomment'])->name('deletecomment');
+});
+
 
 
 require __DIR__ . '/auth.php';

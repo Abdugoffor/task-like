@@ -62,22 +62,42 @@
     </style>
 </head>
 
-<body class="container pt-2">
-    <nav class="navbar navbar-expand-lg bg-secondary rounded">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Task</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<body class="pt-2">
+    <div class="d-flex flex-colum flex-md-row align-items-center p-3 mb-3 bg-white border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Task</h5>
+        <nav class="my-2 my-md-0 mr-md-3 d-flex justify-content-end  w-100">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Blog</a>
+                </li>
+                @if (isset(Auth::user()->role->name) && Auth::user()->role->name == 'admin')
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('kabinet') }}">News </a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('user') }}">Users</a>
                     </li>
-                </ul>
-                <div class="d-flex" role="search">
-                    <a href="{{ route('profile.edit') }}">Kabinet</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+                @endif
+                @if (Route::has('login'))
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/kabinet') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/profile') }}">Profile</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
+
+                        @if (Route::has('register'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register') }}">Register</a>
+                            </li>
+                        @endif
+                    @endauth
+                @endif
+            </ul>
+        </nav>
+    </div>
     @yield('content')
 </body>
 <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>

@@ -1,73 +1,38 @@
 @extends('layouts.admin')
-
 @section('content')
     <div class="container">
         <div class="row">
-            <h2>Dashbord</h2>
+            <h2>Users</h2>
             <div class="col-12 mt-5">
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Add News
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="{{ route('addnews') }}" method="POST">
-                                @csrf
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Title</label>
-                                        <input type="text" name="title" class="form-control" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputPassword1" class="form-label">Description</label>
-                                        <input type="text" name="description" class="form-control"
-                                            id="exampleInputPassword1">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputPassword1" class="form-label">Text</label>
-                                        <textarea name="text" id="" cols="10" rows="5" class="form-control"></textarea>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <input type="submit" class="btn btn-primary" value="Save">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
 
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Descripti</th>
-                            <th scope="col">Likes</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
                             <th scope="col">Comment</th>
+                            <th scope="col">News</th>
                             <th scope="col">Options</th>
+                            <th scope="col">Send Email</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($models as $model)
                             <tr>
                                 <th scope="row">{{ $model->id }}</th>
-                                <td>{{ $model->title }}</td>
-                                <td>{{ $model->description }}</td>
-                                <td>{{ $model->likes }}</td>
-                                <td>{{ $model->comments->count() }}</td>
+                                <td>{{ $model->name }}</td>
+                                <td>{{ $model->email }}</td>
+                                <td>
+                                    <a href="{{ route('viewcomments', $model->id) }}" class="btn btn-info">
+                                        {{ $model->comments->count() }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('viewnews', $model->id) }}" class="btn btn-info">
+                                        {{ $model->news->count() }}
+                                    </a>
+                                </td>
                                 <td>
                                     <!-- Edit news -->
                                     <button type="button" class="btn btn-primary mb-5" data-bs-toggle="modal"
@@ -80,7 +45,7 @@
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <form action="{{ route('editnews', $model->id) }}" method="POST">
+                                                <form action="{{ route('edituser', $model->id) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="modal-header">
@@ -91,22 +56,23 @@
                                                     <div class="modal-body">
 
                                                         <div class="mb-3">
-                                                            <label for="exampleInputEmail1" class="form-label">Title</label>
-                                                            <input type="text" name="title" value="{{ $model->title }}"
-                                                                class="form-control" id="exampleInputEmail1"
-                                                                aria-describedby="emailHelp">
+                                                            <label for="exampleInputEmail1" class="form-label">Name</label>
+                                                            <input type="text" name="name"
+                                                                value="{{ $model->name }}" class="form-control"
+                                                                id="exampleInputEmail1" aria-describedby="emailHelp">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="exampleInputPassword1"
-                                                                class="form-label">Description</label>
-                                                            <input type="text" name="description"
-                                                                value="{{ $model->description }}" class="form-control"
+                                                                class="form-label">Email</label>
+                                                            <input type="email" name="description"
+                                                                value="{{ $model->email }}" class="form-control"
                                                                 id="exampleInputPassword1">
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label for="exampleInputPassword1"
-                                                                class="form-label">Text</label>
-                                                            <textarea name="text" id="" cols="10" rows="5" class="form-control">{{ $model->title }}</textarea>
+                                                            <label for="exampleInputPassword1" class="form-label">New
+                                                                password</label>
+                                                            <input type="password" name="password" class="form-control"
+                                                                id="exampleInputPassword1">
                                                         </div>
 
                                                     </div>
@@ -132,7 +98,7 @@
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <form action="{{ route('deletenews', $model->id) }}" method="POST">
+                                                <form action="{{ route('deleteuser', $model->id) }}" method="POST">
                                                     @csrf
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title
@@ -142,7 +108,7 @@
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <h3>Delete : {{ $model->title }} ? </h3>
+                                                        <h3>Delete : {{ $model->name }} ? </h3>
 
                                                     </div>
                                                     <div class="modal-footer">
@@ -155,6 +121,9 @@
                                         </div>
                                     </div>
                                     {{-- Delete News --}}
+                                </td>
+                                <td>
+                                    <a href="{{ route('sendemail', $model->id) }}">Email</a>
                                 </td>
                             </tr>
                         @endforeach

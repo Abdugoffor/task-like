@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\DemoMail;
+use App\Models\Comment;
+use Mail;
 use App\Models\News;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\DB;
 
 class NewsController extends Controller
 {
@@ -16,7 +22,7 @@ class NewsController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $models = News::where('user_id', $user->id)->get();
+        $models = News::where('user_id', $user->id)->paginate(10);
         return view('news', ['models' => $models]);
     }
     public function store(Request $request)
@@ -37,6 +43,13 @@ class NewsController extends Controller
         $model->user_id = $user->id;
         $model->likes = 0;
         $model->save();
+
+        $mailData = [
+            'title' => 'Текст заголовка',
+            'body' => 'Основной текст'
+        ];
+
+        Mail::to(Auth::user()->email)->send(new DemoMail($mailData));
 
         return redirect()->back()->with('text', 'Successful');
     }
@@ -60,5 +73,17 @@ class NewsController extends Controller
     {
         $news->delete();
         return redirect()->back()->with('text', 'Successful');
+    }
+    public function viewcomments(User $user)
+    {
+
+        $models = Comment::where('user_id', $user->id)->get();
+        return view('comment', ['models' => $models]);
+    }
+
+    public function viewnews(User $user)
+    {
+        $models = News::where('user_id', $user->id)->get();
+        return view('new', ['models' => $models]);
     }
 }

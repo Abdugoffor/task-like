@@ -1,10 +1,10 @@
-@extends('layouts.sayt')
+@extends('layouts.admin')
 @section('content')
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="my-3 p-3 bg-body rounded shadow-sm">
-                    <h6 class="border-bottom pb-2 mb-0">{{ $news->title }}</h6>
+                    <h1 class="border-bottom pb-2 mb-0">{{ $news->title }}</h1>
                     <div class="d-flex text-muted pt-3">
                         <p class="pb-3 mb-0 small lh-sm border-bottom">
                             <strong class="d-block text-gray-dark">Author : {{ $news->user->name }}</strong>
@@ -20,6 +20,7 @@
                                 {{ $model->text }}
                             </p>
                         </div>
+                        <small class="text-muted">{{ $model->created_at->format('H:m, d-M-Y') }}</small>
                     </div>
                 @endforeach
                 <form class="d-flex" method="POST" action="{{ route('addcomment', $news->id) }}">
